@@ -9,7 +9,7 @@ class DashboardApp:
         self.root.title("Tableau de bord de gestion des stocks")
         self.database = ProductDatabase("localhost", "root", "root", "store")
 
-        # Utilisation du thème "clam"
+       
         self.style = ttk.Style()
         self.style.theme_use("clam")
 
@@ -21,7 +21,7 @@ class DashboardApp:
         self.product_tree.bind("<ButtonRelease-1>", self.display_selected_product_info)
 
     def create_widgets(self):
-        # Treeview pour l'affichage des produits
+     
         self.product_tree = ttk.Treeview(self.root, columns=("ID", "Name", "Description", "Price", "Quantity", "Category"), show='headings')
         self.product_tree.heading("ID", text="ID")
         self.product_tree.heading("Name", text="Nom")
@@ -30,7 +30,6 @@ class DashboardApp:
         self.product_tree.heading("Quantity", text="Quantité")
         self.product_tree.heading("Category", text="Catégorie")
 
-        # Ajout des barres de défilement
         y_scrollbar = ttk.Scrollbar(self.root, orient="vertical", command=self.product_tree.yview)
         x_scrollbar = ttk.Scrollbar(self.root, orient="horizontal", command=self.product_tree.xview)
         self.product_tree.configure(yscrollcommand=y_scrollbar.set, xscrollcommand=x_scrollbar.set)
@@ -40,7 +39,7 @@ class DashboardApp:
 
         self.product_tree.pack(expand=True, fill="both")
 
-        # Labels et Entry pour saisir les informations du produit
+   
         ttk.Label(self.root, text="Nom:").pack()
         self.name_entry = ttk.Entry(self.root)
         self.name_entry.pack()
@@ -61,7 +60,7 @@ class DashboardApp:
         self.category_combobox = ttk.Combobox(self.root, values=[1, 2, 3])
         self.category_combobox.pack()
 
-        # Boutons pour ajouter, mettre à jour et supprimer un produit
+        
         self.add_button = ttk.Button(self.root, text="Ajouter le produit", command=self.add_product_callback)
         self.add_button.pack(side=tk.BOTTOM, pady=10)
 
@@ -74,7 +73,7 @@ class DashboardApp:
 
 
     def add_product_callback(self):
-    # Ajout d'un produit à la base de données
+   
         name = self.name_entry.get()
         description = self.description_entry.get()
         price = self.price_entry.get()
@@ -93,29 +92,29 @@ class DashboardApp:
             messagebox.showwarning("Attention", "Le prix doit être un nombre et la quantité un entier.")
             return
 
-    # Appel à la base de données
+   
         if self.database.add_product(name, description, price, quantity, category):
             messagebox.showinfo("Succès", "Produit ajouté avec succès")
-            self.fetch_products_callback()  # Actualiser l'affichage
+            self.fetch_products_callback() 
         else:
             messagebox.showerror("Erreur", "Impossible d'ajouter le produit")
 
 
     def delete_product_callback(self):
-        # Suppression du produit sélectionné de la base de données
+    
         selected_item = self.product_tree.selection()[0]
         product_id = self.product_tree.item(selected_item)['values'][0]
         
         if self.database.delete_product(product_id):
             messagebox.showinfo("Succès", "Produit supprimé avec succès")
-            self.fetch_products_callback()  # Actualiser l'affichage
+            self.fetch_products_callback() 
         else:
             messagebox.showerror("Erreur", "Impossible de supprimer le produit")
 
 
     def update_product_callback(self,name, description, price, quantity, category):
         selected_item = self.product_tree.selection()
-        if selected_item:  # Vérifiez qu'un élément est bien sélectionné
+        if selected_item:  
             selected_item = selected_item[0]
             product_id = self.product_tree.item(selected_item)['values'][0]
 
@@ -132,7 +131,7 @@ class DashboardApp:
 
 
     def fetch_products_callback(self):
-        # Récupération et affichage des produits
+        
         for i in self.product_tree.get_children():
             self.product_tree.delete(i)
         
@@ -141,13 +140,12 @@ class DashboardApp:
             self.product_tree.insert('', 'end', values=product)
 
     def display_selected_product_info(self, event):
-        # Display the information of the selected product in entry widgets
+       
         selected_item = self.product_tree.selection()
         if selected_item:
             selected_item = selected_item[0]
             product_info = self.product_tree.item(selected_item, 'values')
 
-            # Update the entry widgets with the selected product information
             self.name_entry.delete(0, 'end')
             self.name_entry.insert(0, product_info[1])
 
